@@ -317,6 +317,16 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
                     ))}
                   </ul>
                 )}
+                {c.image && (
+                  <div className="mt-3 overflow-hidden rounded-xl border border-border/60 bg-muted/40">
+                    <img
+                      src={c.image.url}
+                      alt={c.image.alt}
+                      className="w-full h-auto block"
+                      loading="lazy"
+                    />
+                  </div>
+                )}
               </div>
             ))}
             {content.extra && <div className="mt-2">{content.extra}</div>}

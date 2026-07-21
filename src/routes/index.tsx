@@ -1,24 +1,288 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import {
+  Heart,
+  Home,
+  Hospital,
+  Activity,
+  Sparkles,
+  Baby,
+  Moon,
+  LogOut,
+} from "lucide-react";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
+const STORAGE_KEY = "birth-guide-access";
+const ACCESS_CODE = "Celia2026";
+
+const stages = [
+  {
+    id: 1,
+    title: "טרום הלידה",
+    intro: "הכנה גופנית ורגשית לקראת היום הגדול — כל מה שחשוב לדעת בשבועות האחרונים.",
+    icon: Heart,
+  },
+  {
+    id: 2,
+    title: "השלב הלטנטי",
+    intro: "הצירים הראשונים מתחילים. איך מזהים, מה עושים בבית, ומתי מתחילים להתארגן.",
+    icon: Moon,
+  },
+  {
+    id: 3,
+    title: "המעבר לבית החולים",
+    intro: "מתי יוצאים, מה לוקחים, ואיך הופכים את הנסיעה לרגועה ובטוחה.",
+    icon: Hospital,
+  },
+  {
+    id: 4,
+    title: "השלב הפעיל",
+    intro: "הצירים מתגברים והלידה מתקדמת. כלים לנשימה, תנוחות ותמיכה של בן/בת הזוג.",
+    icon: Activity,
+  },
+  {
+    id: 5,
+    title: "לידת השליה",
+    intro: "השלב השלישי של הלידה — מה קורה בגוף אחרי הלידה עצמה, וכיצד מלווים אותו.",
+    icon: Sparkles,
+  },
+  {
+    id: 6,
+    title: "הרגע שאחרי",
+    intro: "המפגש הראשון עם התינוק/ת, מגע עור לעור, והנקה ראשונה ברוגע.",
+    icon: Baby,
+  },
+  {
+    id: 7,
+    title: "משכב לידה",
+    intro: "החזרה הביתה, ההחלמה הגופנית והרגשית, ותמיכה בימים ובשבועות הראשונים.",
+    icon: Home,
+  },
+] as const;
+
 function Index() {
+  const [unlocked, setUnlocked] = useState(false);
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setUnlocked(window.localStorage.getItem(STORAGE_KEY) === "true");
+      setReady(true);
+    }
+  }, []);
+
+  if (!ready) return null;
+
+  return unlocked ? (
+    <Dashboard onLogout={() => {
+      window.localStorage.removeItem(STORAGE_KEY);
+      setUnlocked(false);
+    }} />
+  ) : (
+    <AccessGate onUnlock={() => {
+      window.localStorage.setItem(STORAGE_KEY, "true");
+      setUnlocked(true);
+    }} />
+  );
+}
+
+function AccessGate({ onUnlock }: { onUnlock: () => void }) {
+  const [code, setCode] = useState("");
+  const [error, setError] = useState(false);
+
+  const submit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (code.trim() === ACCESS_CODE) {
+      setError(false);
+      onUnlock();
+    } else {
+      setError(true);
+    }
+  };
+
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+    <div className="min-h-screen flex items-center justify-center px-6 py-10 bg-gradient-to-b from-accent/40 via-background to-secondary/30">
+      <div className="w-full max-w-md">
+        <div className="bg-card rounded-3xl shadow-[0_20px_60px_-20px_rgba(180,120,120,0.25)] p-8 sm:p-10 border border-border/60">
+          <div className="flex justify-center mb-6">
+            <div className="w-16 h-16 rounded-2xl bg-primary/30 flex items-center justify-center">
+              <Heart className="w-8 h-8 text-foreground/70" strokeWidth={1.8} />
+            </div>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-bold text-center text-foreground leading-snug">
+            ברוכים הבאים לליווי הדיגיטלי ללידה
+          </h1>
+          <p className="text-center text-muted-foreground mt-3 text-sm leading-relaxed">
+            מרחב שקט ומכיל שילווה אתכם בכל שלב.
+          </p>
+
+          <form onSubmit={submit} className="mt-8 space-y-4">
+            <label className="block">
+              <span className="block text-sm font-medium text-foreground mb-2">
+                קוד גישה
+              </span>
+              <input
+                type="text"
+                value={code}
+                onChange={(e) => {
+                  setCode(e.target.value);
+                  if (error) setError(false);
+                }}
+                placeholder="הזינו את הקוד שקיבלתם"
+                className="w-full rounded-2xl border border-input bg-background px-4 py-3 text-base text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition text-right"
+                dir="rtl"
+                autoFocus
+              />
+            </label>
+
+            {error && (
+              <p className="text-sm text-destructive bg-destructive/10 rounded-xl px-3 py-2 text-right">
+                קוד גישה שגוי, אנא בדקו את הקוד שקיבלתם בקורס
+              </p>
+            )}
+
+            <button
+              type="submit"
+              className="w-full rounded-2xl bg-primary text-primary-foreground font-semibold py-3.5 text-base shadow-sm hover:opacity-90 active:scale-[0.99] transition"
+            >
+              כניסה
+            </button>
+          </form>
+        </div>
+        <p className="text-center text-xs text-muted-foreground mt-6">
+          ליווי חם ומקצועי לזוגות בדרך אל ההורות.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function Dashboard({ onLogout }: { onLogout: () => void }) {
+  const [activeId, setActiveId] = useState<number>(1);
+  const active = stages.find((s) => s.id === activeId)!;
+  const ActiveIcon = active.icon;
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-accent/30 via-background to-secondary/20">
+      <header className="sticky top-0 z-10 backdrop-blur-md bg-background/80 border-b border-border/60">
+        <div className="max-w-2xl mx-auto px-5 py-4 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2 min-w-0">
+            <div className="w-9 h-9 rounded-xl bg-primary/30 flex items-center justify-center shrink-0">
+              <Heart className="w-4.5 h-4.5 text-foreground/70" strokeWidth={2} />
+            </div>
+            <div className="min-w-0">
+              <h1 className="text-base font-bold text-foreground truncate">
+                ליווי דיגיטלי ללידה
+              </h1>
+              <p className="text-[11px] text-muted-foreground truncate">
+                המדריך שלכם, בכל שלב
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={onLogout}
+            className="shrink-0 flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground bg-muted rounded-full px-3 py-2 transition"
+            aria-label="יציאה"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            <span>יציאה</span>
+          </button>
+        </div>
+      </header>
+
+      <main className="max-w-2xl mx-auto px-5 pt-6 pb-16">
+        <div className="mb-2 flex items-baseline justify-between">
+          <h2 className="text-lg font-semibold text-foreground">שלבי הלידה</h2>
+          <span className="text-xs text-muted-foreground">
+            {activeId} מתוך {stages.length}
+          </span>
+        </div>
+
+        <div className="-mx-5 px-5 overflow-x-auto scrollbar-hide">
+          <ol className="flex gap-2.5 pb-3 min-w-max" dir="rtl">
+            {stages.map((s) => {
+              const Icon = s.icon;
+              const isActive = s.id === activeId;
+              return (
+                <li key={s.id}>
+                  <button
+                    onClick={() => setActiveId(s.id)}
+                    className={`flex flex-col items-center gap-1.5 min-w-[76px] rounded-2xl px-3 py-3 transition border ${
+                      isActive
+                        ? "bg-primary text-primary-foreground border-primary shadow-md"
+                        : "bg-card text-foreground/80 border-border/60 hover:border-primary/50"
+                    }`}
+                  >
+                    <div
+                      className={`w-9 h-9 rounded-xl flex items-center justify-center ${
+                        isActive ? "bg-primary-foreground/20" : "bg-muted"
+                      }`}
+                    >
+                      <Icon className="w-4.5 h-4.5" strokeWidth={2} />
+                    </div>
+                    <span className="text-[10px] font-semibold">שלב {s.id}</span>
+                    <span className="text-[11px] leading-tight text-center line-clamp-2 max-w-[68px]">
+                      {s.title}
+                    </span>
+                  </button>
+                </li>
+              );
+            })}
+          </ol>
+        </div>
+
+        <article className="mt-6 bg-card rounded-3xl border border-border/60 shadow-[0_10px_40px_-20px_rgba(180,120,120,0.2)] p-6 sm:p-8">
+          <div className="flex items-start gap-4">
+            <div className="w-14 h-14 shrink-0 rounded-2xl bg-secondary/60 flex items-center justify-center">
+              <ActiveIcon className="w-6 h-6 text-foreground/75" strokeWidth={1.8} />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-xs font-semibold text-muted-foreground mb-1">
+                שלב {active.id}
+              </p>
+              <h3 className="text-xl sm:text-2xl font-bold text-foreground leading-snug">
+                {active.title}
+              </h3>
+            </div>
+          </div>
+
+          <p className="mt-5 text-[15px] leading-relaxed text-foreground/85">
+            {active.intro}
+          </p>
+
+          <div className="mt-6 grid gap-3">
+            {["מה קורה עכשיו", "טיפים מעשיים", "תמיכה של בן/בת הזוג"].map((label) => (
+              <div
+                key={label}
+                className="rounded-2xl bg-muted/60 border border-border/50 px-4 py-3.5 flex items-center justify-between"
+              >
+                <span className="text-sm font-medium text-foreground/85">{label}</span>
+                <span className="text-xs text-muted-foreground">בקרוב</span>
+              </div>
+            ))}
+          </div>
+        </article>
+
+        <div className="mt-6 flex gap-3">
+          <button
+            onClick={() => setActiveId((id) => Math.max(1, id - 1))}
+            disabled={activeId === 1}
+            className="flex-1 rounded-2xl bg-card border border-border/60 py-3 text-sm font-medium text-foreground/80 disabled:opacity-40 hover:border-primary/50 transition"
+          >
+            השלב הקודם
+          </button>
+          <button
+            onClick={() => setActiveId((id) => Math.min(stages.length, id + 1))}
+            disabled={activeId === stages.length}
+            className="flex-1 rounded-2xl bg-primary text-primary-foreground py-3 text-sm font-semibold disabled:opacity-40 hover:opacity-90 transition"
+          >
+            השלב הבא
+          </button>
+        </div>
+      </main>
     </div>
   );
 }

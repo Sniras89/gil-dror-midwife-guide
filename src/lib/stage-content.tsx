@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { UrgencyCalculator } from "../components/UrgencyCalculator";
+import pressurePoints from "./../assets/pressure-points.png.asset.json";
 
 export type ContentCard = {
   title: string;
@@ -7,6 +8,7 @@ export type ContentCard = {
   tag?: string;
   subtitle?: string;
   bullets?: string[];
+  image?: { url: string; alt: string };
 };
 
 export type StageContent = {

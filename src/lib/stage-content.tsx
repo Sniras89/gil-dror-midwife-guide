@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { UrgencyCalculator } from "../components/UrgencyCalculator";
+import pressurePoints from "./../assets/pressure-points.png.asset.json";
 
 export type ContentCard = {
   title: string;
@@ -7,6 +8,7 @@ export type ContentCard = {
   tag?: string;
   subtitle?: string;
   bullets?: string[];
+  image?: { url: string; alt: string };
 };
 
 export type StageContent = {
@@ -78,6 +80,17 @@ export const stageContent: Record<number, StageContent> = {
         tag: "כלי",
         title: "מקלחת חמה",
         body: "מים חמים על הגב התחתון או הבטן מרגיעים שרירים, מפחיתים כאב ומעודדים הפרשת אוקסיטוצין.",
+      },
+      {
+        tag: "טכניקה",
+        title: "הקשיבו לגוף שלכן",
+        body: "הגוף יכווין אתכן באיזו תנוחה יהיה לכן הכי נוח להעביר בה את הציר.",
+      },
+      {
+        tag: "טכניקה",
+        title: "לחיצות בגב התחתון ובעצם הזנב",
+        body: "לחיצות ועיסויים ממוקדים בגב התחתון, בעצם הזנב ובצידי האגן — מבוצעים בזמן ציר ורק אם זה נעים ונוח ליולדת.",
+        image: { url: pressurePoints.url, alt: "אזורי לחיצה ועיסוי בגב התחתון, עצם הזנב וצידי האגן" },
       },
       {
         tag: "טכניקה",

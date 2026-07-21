@@ -297,9 +297,26 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
                 <h4 className="text-base font-bold text-foreground leading-snug">
                   {c.title}
                 </h4>
+                {c.subtitle && (
+                  <p className="mt-1 text-sm font-medium text-primary/80">
+                    {c.subtitle}
+                  </p>
+                )}
                 <p className="mt-1.5 text-sm leading-relaxed text-foreground/80">
                   {c.body}
                 </p>
+                {c.bullets && (
+                  <ul className="mt-2.5 space-y-1.5 pr-4 list-disc marker:text-primary/70">
+                    {c.bullets.map((b) => (
+                      <li
+                        key={b}
+                        className="text-sm leading-relaxed text-foreground/80"
+                      >
+                        {b}
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
             ))}
             {content.extra && <div className="mt-2">{content.extra}</div>}

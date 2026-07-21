@@ -9,7 +9,13 @@ import {
   Baby,
   Moon,
   LogOut,
+  AlertTriangle,
+  ListChecks,
+  BookOpen,
 } from "lucide-react";
+import { stageContent } from "../lib/stage-content";
+import { PackingChecklist } from "../components/PackingChecklist";
+import { UrgencyCalculator } from "../components/UrgencyCalculator";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -162,8 +168,10 @@ function AccessGate({ onUnlock }: { onUnlock: () => void }) {
 
 function Dashboard({ onLogout }: { onLogout: () => void }) {
   const [activeId, setActiveId] = useState<number>(1);
+  const [tab, setTab] = useState<"stages" | "checklist" | "urgency">("stages");
   const active = stages.find((s) => s.id === activeId)!;
   const ActiveIcon = active.icon;
+  const content = stageContent[active.id];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-accent/30 via-background to-secondary/20">
@@ -191,9 +199,29 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
             <span>יציאה</span>
           </button>
         </div>
+        <div className="max-w-2xl mx-auto px-5 pb-3">
+          <div className="grid grid-cols-3 gap-1.5 bg-muted/70 rounded-2xl p-1">
+            <TabButton active={tab === "stages"} onClick={() => setTab("stages")} icon={BookOpen} label="שלבים" />
+            <TabButton active={tab === "urgency"} onClick={() => setTab("urgency")} icon={AlertTriangle} label="מתי יוצאים?" />
+            <TabButton active={tab === "checklist"} onClick={() => setTab("checklist")} icon={ListChecks} label="רשימת ציוד" />
+          </div>
+        </div>
       </header>
 
       <main className="max-w-2xl mx-auto px-5 pt-6 pb-16">
+        {tab === "checklist" && <PackingChecklist />}
+
+        {tab === "urgency" && (
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground text-center">
+              כלי מהיר להערכה — לא מחליף ייעוץ רפואי.
+            </p>
+            <UrgencyCalculator />
+          </div>
+        )}
+
+        {tab === "stages" && (
+          <>
         <div className="mb-2 flex items-baseline justify-between">
           <h2 className="text-lg font-semibold text-foreground">שלבי הלידה</h2>
           <span className="text-xs text-muted-foreground">
@@ -252,19 +280,31 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
           <p className="mt-5 text-[15px] leading-relaxed text-foreground/85">
             {active.intro}
           </p>
+        </article>
 
-          <div className="mt-6 grid gap-3">
-            {["מה קורה עכשיו", "טיפים מעשיים", "תמיכה של בן/בת הזוג"].map((label) => (
+        {content && (
+          <div className="mt-5 space-y-3">
+            {content.cards.map((c) => (
               <div
-                key={label}
-                className="rounded-2xl bg-muted/60 border border-border/50 px-4 py-3.5 flex items-center justify-between"
+                key={c.title}
+                className="rounded-2xl bg-card border border-border/60 px-5 py-4 shadow-sm"
               >
-                <span className="text-sm font-medium text-foreground/85">{label}</span>
-                <span className="text-xs text-muted-foreground">בקרוב</span>
+                {c.tag && (
+                  <span className="inline-block text-[10px] font-semibold uppercase tracking-wider text-primary-foreground bg-primary/70 rounded-full px-2 py-0.5 mb-2">
+                    {c.tag}
+                  </span>
+                )}
+                <h4 className="text-base font-bold text-foreground leading-snug">
+                  {c.title}
+                </h4>
+                <p className="mt-1.5 text-sm leading-relaxed text-foreground/80">
+                  {c.body}
+                </p>
               </div>
             ))}
+            {content.extra && <div className="mt-2">{content.extra}</div>}
           </div>
-        </article>
+        )}
 
         <div className="mt-6 flex gap-3">
           <button
@@ -282,7 +322,35 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
             השלב הבא
           </button>
         </div>
+          </>
+        )}
       </main>
     </div>
+  );
+}
+
+function TabButton({
+  active,
+  onClick,
+  icon: Icon,
+  label,
+}: {
+  active: boolean;
+  onClick: () => void;
+  icon: typeof Heart;
+  label: string;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={`flex items-center justify-center gap-1.5 rounded-xl py-2 text-xs font-semibold transition ${
+        active
+          ? "bg-card text-foreground shadow-sm"
+          : "text-muted-foreground hover:text-foreground"
+      }`}
+    >
+      <Icon className="w-3.5 h-3.5" strokeWidth={2} />
+      <span>{label}</span>
+    </button>
   );
 }

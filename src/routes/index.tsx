@@ -302,7 +302,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
                     {c.subtitle}
                   </p>
                 )}
-                <p className="mt-1.5 text-sm leading-relaxed text-foreground/80">
+                <p className="mt-1.5 text-sm leading-relaxed text-foreground/80 whitespace-pre-line">
                   {c.body}
                 </p>
                 {c.bullets && (

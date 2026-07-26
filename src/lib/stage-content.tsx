@@ -1,6 +1,11 @@
 import type { ReactNode } from "react";
 import { UrgencyCalculator } from "../components/UrgencyCalculator";
 import pressurePoints from "./../assets/pressure-points.png.asset.json";
+import positionSide from "./../assets/position-side.png.asset.json";
+import positionHandsKnees from "./../assets/position-hands-knees.png.asset.json";
+import positionBack from "./../assets/position-back.png.asset.json";
+
+export type BirthType = "first" | "repeat";
 
 export type ContentCard = {
   title: string;
@@ -9,6 +14,7 @@ export type ContentCard = {
   subtitle?: string;
   bullets?: string[];
   image?: { url: string; alt: string };
+  highlight?: boolean;
 };
 
 export type StageContent = {
@@ -21,20 +27,23 @@ const positionCards: ContentCard[] = [
     tag: "תנוחה",
     title: "שכיבה על הצד",
     body: "יתרונות: מפחיתה לחץ על הגב, מסייעת בסיבוב התינוק, נוחה בין צירים. חסרונות: כוח הכובד פחות מסייע לירידת התינוק.",
+    image: { url: positionSide.url, alt: "יולדת שוכבת על הצד עם כרית בין הרגליים" },
   },
   {
     tag: "תנוחה",
     title: "עמידת שש (על ארבע)",
     body: "יתרונות: מקלה על כאבי גב, פותחת את האגן, מסייעת בתנוחת עורף. חסרונות: עלולה לעייף את הידיים והברכיים לאורך זמן.",
+    image: { url: positionHandsKnees.url, alt: "יולדת בעמידת שש על ארבע" },
   },
   {
     tag: "תנוחה",
     title: "שכיבה על הגב",
     body: "יתרונות: נוחה לצוות הרפואי לבדיקות ולניטור. חסרונות: לוחצת על כלי דם גדולים, מאיטה את הלידה ומגבירה כאב — מומלץ להימנע להימשך.",
+    image: { url: positionBack.url, alt: "יולדת שוכבת על הגב עם רגליים מורמות על כרית" },
   },
 ];
 
-export const stageContent: Record<number, StageContent> = {
+const stageContent: Record<number, StageContent> = {
   1: {
     cards: [
       {

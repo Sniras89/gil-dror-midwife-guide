@@ -496,6 +496,8 @@ function Dashboard({
           </>
         )}
       </main>
+
+      <AboutModal open={aboutOpen} onClose={() => setAboutOpen(false)} />
     </div>
   );
 }

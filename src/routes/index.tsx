@@ -21,6 +21,22 @@ import { PackingChecklist } from "../components/PackingChecklist";
 import { UrgencyCalculator } from "../components/UrgencyCalculator";
 
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "ליווי דיגיטלי ללידה — מדריך 7 שלבי הלידה" },
+      {
+        name: "description",
+        content:
+          "מדריך אינטראקטיבי בעברית לזוגות: 7 שלבי הלידה, מחשבון מתי יוצאים לבית החולים ורשימת ציוד — ללידה ראשונה או חוזרת.",
+      },
+      { property: "og:title", content: "ליווי דיגיטלי ללידה — מדריך 7 שלבי הלידה" },
+      {
+        property: "og:description",
+        content:
+          "כלים, תנוחות, נשימות ורשימת ציוד — ליווי מותאם ללידה ראשונה או חוזרת.",
+      },
+    ],
+  }),
   component: Index,
 });
 

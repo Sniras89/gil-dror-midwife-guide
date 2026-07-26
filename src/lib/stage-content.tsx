@@ -143,7 +143,7 @@ const stageContent: Record<number, StageContent> = {
         body: "אורות עמומים, מוזיקה מוכרת, כרית לאזור הגב, שקית להקאות למקרה הצורך. בן/בת הזוג נוהג/ת ברוגע — אין צורך למהר.",
       },
     ],
-    extra: <UrgencyCalculator />,
+    extra: <UrgencyCalculator birthType="first" />,
   },
   4: {
     cards: [

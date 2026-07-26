@@ -15,10 +15,12 @@ import {
   Repeat,
   Sprout,
   RefreshCw,
+  Info,
 } from "lucide-react";
 import { getStageContent, type BirthType } from "../lib/stage-content";
 import { PackingChecklist } from "../components/PackingChecklist";
 import { UrgencyCalculator } from "../components/UrgencyCalculator";
+import { AboutModal } from "../components/AboutModal";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -289,6 +291,7 @@ function Dashboard({
 }) {
   const [activeId, setActiveId] = useState<number>(1);
   const [tab, setTab] = useState<"stages" | "checklist" | "urgency">("stages");
+  const [aboutOpen, setAboutOpen] = useState(false);
   const active = stages.find((s) => s.id === activeId)!;
   const ActiveIcon = active.icon;
   const content = getStageContent(birthType)[active.id];
@@ -311,6 +314,14 @@ function Dashboard({
             </div>
           </div>
           <div className="shrink-0 flex items-center gap-1.5">
+            <button
+              onClick={() => setAboutOpen(true)}
+              className="flex items-center gap-1.5 text-[11px] font-medium text-foreground/80 hover:text-foreground bg-secondary/60 hover:bg-secondary rounded-full px-2.5 py-2 transition"
+              aria-label="אודות"
+            >
+              <Info className="w-3.5 h-3.5" />
+              <span>אודות</span>
+            </button>
             <button
               onClick={onChangeBirthType}
               className="flex items-center gap-1.5 text-[11px] font-medium text-foreground/80 hover:text-foreground bg-primary/20 hover:bg-primary/30 rounded-full px-2.5 py-2 transition"

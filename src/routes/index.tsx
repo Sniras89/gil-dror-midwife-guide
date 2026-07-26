@@ -12,17 +12,42 @@ import {
   AlertTriangle,
   ListChecks,
   BookOpen,
+  Repeat,
+  Sprout,
+  RefreshCw,
 } from "lucide-react";
-import { stageContent } from "../lib/stage-content";
+import { getStageContent, type BirthType } from "../lib/stage-content";
 import { PackingChecklist } from "../components/PackingChecklist";
 import { UrgencyCalculator } from "../components/UrgencyCalculator";
 
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "ליווי דיגיטלי ללידה — מדריך 7 שלבי הלידה" },
+      {
+        name: "description",
+        content:
+          "מדריך אינטראקטיבי בעברית לזוגות: 7 שלבי הלידה, מחשבון מתי יוצאים לבית החולים ורשימת ציוד — ללידה ראשונה או חוזרת.",
+      },
+      { property: "og:title", content: "ליווי דיגיטלי ללידה — מדריך 7 שלבי הלידה" },
+      {
+        property: "og:description",
+        content:
+          "כלים, תנוחות, נשימות ורשימת ציוד — ליווי מותאם ללידה ראשונה או חוזרת.",
+      },
+    ],
+  }),
   component: Index,
 });
 
 const STORAGE_KEY = "birth-guide-access";
+const BIRTH_TYPE_KEY = "birth-guide-birth-type";
 const ACCESS_CODE = "Celia2026";
+
+const birthTypeLabels: Record<BirthType, string> = {
+  first: "לידה ראשונה",
+  repeat: "לידה חוזרת",
+};
 
 const stages = [
   {
@@ -71,27 +96,114 @@ const stages = [
 
 function Index() {
   const [unlocked, setUnlocked] = useState(false);
+  const [birthType, setBirthType] = useState<BirthType | null>(null);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       setUnlocked(window.localStorage.getItem(STORAGE_KEY) === "true");
+      const saved = window.localStorage.getItem(BIRTH_TYPE_KEY);
+      if (saved === "first" || saved === "repeat") setBirthType(saved);
       setReady(true);
     }
   }, []);
 
   if (!ready) return null;
 
-  return unlocked ? (
-    <Dashboard onLogout={() => {
-      window.localStorage.removeItem(STORAGE_KEY);
-      setUnlocked(false);
-    }} />
-  ) : (
-    <AccessGate onUnlock={() => {
-      window.localStorage.setItem(STORAGE_KEY, "true");
-      setUnlocked(true);
-    }} />
+  if (!unlocked) {
+    return (
+      <AccessGate
+        onUnlock={() => {
+          window.localStorage.setItem(STORAGE_KEY, "true");
+          setUnlocked(true);
+        }}
+      />
+    );
+  }
+
+  if (!birthType) {
+    return (
+      <BirthTypeSelect
+        onSelect={(t) => {
+          window.localStorage.setItem(BIRTH_TYPE_KEY, t);
+          setBirthType(t);
+        }}
+      />
+    );
+  }
+
+  return (
+    <Dashboard
+      birthType={birthType}
+      onChangeBirthType={() => {
+        window.localStorage.removeItem(BIRTH_TYPE_KEY);
+        setBirthType(null);
+      }}
+      onLogout={() => {
+        window.localStorage.removeItem(STORAGE_KEY);
+        setUnlocked(false);
+      }}
+    />
+  );
+}
+
+function BirthTypeSelect({ onSelect }: { onSelect: (t: BirthType) => void }) {
+  const options = [
+    {
+      type: "first" as BirthType,
+      icon: Sprout,
+      desc: "הפעם הראשונה — נלווה אתכם צעד צעד, מהסימנים המקדימים ועד משכב הלידה.",
+    },
+    {
+      type: "repeat" as BirthType,
+      icon: Repeat,
+      desc: "כבר עברתם את זה — תוכן מותאם לקצב מהיר, לאחים בבית ולהיערכות מראש.",
+    },
+  ];
+
+  return (
+    <div className="min-h-screen flex items-center justify-center px-6 py-10 bg-gradient-to-b from-accent/40 via-background to-secondary/30">
+      <div className="w-full max-w-md animate-in fade-in duration-500">
+        <div className="flex justify-center mb-6">
+          <div className="w-14 h-14 rounded-2xl bg-primary/30 flex items-center justify-center">
+            <Heart className="w-7 h-7 text-foreground/70" strokeWidth={1.8} />
+          </div>
+        </div>
+        <h1 className="text-2xl sm:text-3xl font-bold text-center text-foreground leading-snug">
+          ברוכים הבאים! באיזו לידה מדובר?
+        </h1>
+        <p className="text-center text-muted-foreground mt-3 text-sm leading-relaxed">
+          נתאים את התוכן במיוחד בשבילכם. תמיד אפשר לשנות.
+        </p>
+
+        <div className="mt-8 space-y-4">
+          {options.map((o) => {
+            const Icon = o.icon;
+            return (
+              <button
+                key={o.type}
+                onClick={() => onSelect(o.type)}
+                className="w-full text-right rounded-3xl bg-card border border-border/60 p-5 shadow-sm hover:border-primary hover:shadow-md active:scale-[0.99] transition-all duration-200"
+              >
+                <div className="flex items-center gap-4">
+                  <span className="w-12 h-12 shrink-0 rounded-2xl bg-secondary/60 flex items-center justify-center">
+                    <Icon className="w-6 h-6 text-foreground/75" strokeWidth={1.8} />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block text-lg font-bold text-foreground">
+                      {birthTypeLabels[o.type]}
+                    </span>
+                    <span className="block text-xs text-muted-foreground mt-1 leading-relaxed">
+                      {o.desc}
+                    </span>
+                  </span>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -166,12 +278,20 @@ function AccessGate({ onUnlock }: { onUnlock: () => void }) {
   );
 }
 
-function Dashboard({ onLogout }: { onLogout: () => void }) {
+function Dashboard({
+  birthType,
+  onChangeBirthType,
+  onLogout,
+}: {
+  birthType: BirthType;
+  onChangeBirthType: () => void;
+  onLogout: () => void;
+}) {
   const [activeId, setActiveId] = useState<number>(1);
   const [tab, setTab] = useState<"stages" | "checklist" | "urgency">("stages");
   const active = stages.find((s) => s.id === activeId)!;
   const ActiveIcon = active.icon;
-  const content = stageContent[active.id];
+  const content = getStageContent(birthType)[active.id];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-accent/30 via-background to-secondary/20">
@@ -186,18 +306,27 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
                 ליווי דיגיטלי ללידה
               </h1>
               <p className="text-[11px] text-muted-foreground truncate">
-                המדריך שלכם, בכל שלב
+                {birthTypeLabels[birthType]}
               </p>
             </div>
           </div>
-          <button
-            onClick={onLogout}
-            className="shrink-0 flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground bg-muted rounded-full px-3 py-2 transition"
-            aria-label="יציאה"
-          >
-            <LogOut className="w-3.5 h-3.5" />
-            <span>יציאה</span>
-          </button>
+          <div className="shrink-0 flex items-center gap-1.5">
+            <button
+              onClick={onChangeBirthType}
+              className="flex items-center gap-1.5 text-[11px] font-medium text-foreground/80 hover:text-foreground bg-primary/20 hover:bg-primary/30 rounded-full px-2.5 py-2 transition"
+              aria-label="שינוי סוג לידה"
+            >
+              <RefreshCw className="w-3.5 h-3.5" />
+              <span>שינוי: {birthTypeLabels[birthType]}</span>
+            </button>
+            <button
+              onClick={onLogout}
+              className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground bg-muted rounded-full px-2.5 py-2 transition"
+              aria-label="יציאה"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+            </button>
+          </div>
         </div>
         <div className="max-w-2xl mx-auto px-5 pb-3">
           <div className="grid grid-cols-3 gap-1.5 bg-muted/70 rounded-2xl p-1">
@@ -216,7 +345,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
             <p className="text-sm text-muted-foreground text-center">
               כלי מהיר להערכה — לא מחליף ייעוץ רפואי.
             </p>
-            <UrgencyCalculator />
+            <UrgencyCalculator birthType={birthType} />
           </div>
         )}
 
@@ -287,7 +416,11 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
             {content.cards.map((c) => (
               <div
                 key={c.title}
-                className="rounded-2xl bg-card border border-border/60 px-5 py-4 shadow-sm"
+                className={`rounded-2xl px-5 py-4 shadow-sm transition ${
+                  c.highlight
+                    ? "bg-primary/10 border-2 border-primary/60"
+                    : "bg-card border border-border/60"
+                }`}
               >
                 {c.tag && (
                   <span className="inline-block text-[10px] font-semibold uppercase tracking-wider text-primary-foreground bg-primary/70 rounded-full px-2 py-0.5 mb-2">
@@ -318,7 +451,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
                   </ul>
                 )}
                 {c.image && (
-                  <div className="mt-3 overflow-hidden rounded-xl border border-border/60 bg-muted/40">
+                  <div className="mt-3 mx-auto max-w-xs overflow-hidden rounded-2xl border border-border/60 bg-muted/40">
                     <img
                       src={c.image.url}
                       alt={c.image.alt}

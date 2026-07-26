@@ -1,6 +1,11 @@
 import type { ReactNode } from "react";
 import { UrgencyCalculator } from "../components/UrgencyCalculator";
 import pressurePoints from "./../assets/pressure-points.png.asset.json";
+import positionSide from "./../assets/position-side.png.asset.json";
+import positionHandsKnees from "./../assets/position-hands-knees.png.asset.json";
+import positionBack from "./../assets/position-back.png.asset.json";
+
+export type BirthType = "first" | "repeat";
 
 export type ContentCard = {
   title: string;
@@ -9,6 +14,7 @@ export type ContentCard = {
   subtitle?: string;
   bullets?: string[];
   image?: { url: string; alt: string };
+  highlight?: boolean;
 };
 
 export type StageContent = {
@@ -21,20 +27,23 @@ const positionCards: ContentCard[] = [
     tag: "תנוחה",
     title: "שכיבה על הצד",
     body: "יתרונות: מפחיתה לחץ על הגב, מסייעת בסיבוב התינוק, נוחה בין צירים. חסרונות: כוח הכובד פחות מסייע לירידת התינוק.",
+    image: { url: positionSide.url, alt: "יולדת שוכבת על הצד עם כרית בין הרגליים" },
   },
   {
     tag: "תנוחה",
     title: "עמידת שש (על ארבע)",
     body: "יתרונות: מקלה על כאבי גב, פותחת את האגן, מסייעת בתנוחת עורף. חסרונות: עלולה לעייף את הידיים והברכיים לאורך זמן.",
+    image: { url: positionHandsKnees.url, alt: "יולדת בעמידת שש על ארבע" },
   },
   {
     tag: "תנוחה",
     title: "שכיבה על הגב",
     body: "יתרונות: נוחה לצוות הרפואי לבדיקות ולניטור. חסרונות: לוחצת על כלי דם גדולים, מאיטה את הלידה ומגבירה כאב — מומלץ להימנע להימשך.",
+    image: { url: positionBack.url, alt: "יולדת שוכבת על הגב עם רגליים מורמות על כרית" },
   },
 ];
 
-export const stageContent: Record<number, StageContent> = {
+const stageContent: Record<number, StageContent> = {
   1: {
     cards: [
       {
@@ -134,7 +143,7 @@ export const stageContent: Record<number, StageContent> = {
         body: "אורות עמומים, מוזיקה מוכרת, כרית לאזור הגב, שקית להקאות למקרה הצורך. בן/בת הזוג נוהג/ת ברוגע — אין צורך למהר.",
       },
     ],
-    extra: <UrgencyCalculator />,
+    extra: <UrgencyCalculator birthType="first" />,
   },
   4: {
     cards: [
@@ -239,3 +248,127 @@ export const stageContent: Record<number, StageContent> = {
     ],
   },
 };
+
+/** תוספות ושינויי תוכן ייחודיים ללידה חוזרת */
+const repeatExtraCards: Record<number, ContentCard[]> = {
+  1: [
+    {
+      tag: "דגל אדום",
+      title: "GBS חיובי",
+      body: "אם בבדיקת ה-GBS התוצאה חיובית — יש להגיע לבית החולים בהקדם האפשרי עם תחילת הצירים או ירידת מים, כדי לקבל אנטיביוטיקה בזמן. כמו במים מקוניאליים (ירוקים/חומים) — לא ממתינים בבית.",
+      highlight: true,
+    },
+    {
+      tag: "טיפ",
+      title: "איך בודקים אם אלו מים?",
+      body: "אפשר לקחת חתיכת בד, לשים בין הרגליים ולהשתעל. אם נרטב - זו ירידת מים.",
+    },
+    {
+      tag: "סימן מקדים",
+      title: "הפרשה דמית",
+      body: "הפרשה חומה-ורודה או מעורבת בדם, שמופיעה לרוב לאחר יציאת הפקק הרירי או בעקבות שינויים בצוואר הרחם. בלידה חוזרת היא יכולה להופיע ולהתקדם מהר יותר — כדאי לעקוב ולעדכן את הצוות.",
+    },
+  ],
+  2: [
+    {
+      tag: "לידה חוזרת",
+      title: "הקצב שונה הפעם",
+      body: "בלידה חוזרת - השלב הלטנטי יכול להיות ארוך או קצר, אך ברגע שנכנסים לשלב האקטיבי — הוא יהיה מהיר מאוד!",
+      highlight: true,
+    },
+    {
+      tag: "מושגים",
+      title: "צוואר הרחם בלידה חוזרת",
+      body: "בלידה חוזרת השינויים בצוואר הרחם לא תמיד נעשים לפי הסדר. לעיתים הפתיחה מקדימה את המחיקה, ולכן בדיקה אחת לא תמיד מספרת את כל הסיפור.",
+    },
+  ],
+  3: [
+    {
+      tag: "היערכות",
+      title: "לא לחכות לרגע האחרון!",
+      body: "לא לחכות לרגע האחרון! היערכו עם הבייביסיטר וגיבוי ברגע שמשהו מתחיל. בלידה חוזרת הדברים יכולים להתקדם מהר מאוד, ועדיף לצאת מוקדם מדי מלהיתקע בבית.",
+      highlight: true,
+    },
+    {
+      tag: "דגל אדום",
+      title: "GBS חיובי — יוצאים מיד",
+      body: "עם GBS חיובי אין להמתין לצירים סדירים: יוצאים לבית החולים עם תחילת הצירים או ירידת מים, כדי לאפשר מתן אנטיביוטיקה מספר שעות לפני הלידה.",
+    },
+  ],
+  4: [
+    {
+      tag: "שיכוך כאב",
+      title: "אפידורל בלידה חוזרת",
+      body: "לידה חוזרת נוטה להיות מהירה, ולכן בלא מעט מקרים נשים לא מספיקות לקבל אפידורל או שהוא לא מספיק להשפיע. כדאי להיערך מראש לכלים טבעיים לשיכוך כאב.",
+      highlight: true,
+    },
+    {
+      tag: "לחיצות",
+      title: "שלב הלחיצות",
+      body: "השלב מהיר יותר. לעיתים נתחיל ללחוץ מוקדם יותר מאחר ולגוף יש זיכרון שריר.",
+    },
+    {
+      tag: "הבצבוץ",
+      title: "שלב ההבצבוץ (Crowning)",
+      body: "בלידה חוזרת — שכיחות הקרעים נמוכה משמעותית מלידה ראשונה! הרקמות גמישות יותר, אך עדיין חשוב לנשום ולהאט בשלב הזה.",
+    },
+  ],
+  6: [
+    {
+      tag: "מעקב",
+      title: "כלל החיתולים — כמה זה תקין?",
+      body: "מעקב פשוט אחרי מספר החיתולים ביום מלמד שההנקה מספקת:",
+      bullets: [
+        "יום 1: חיתול רטוב אחד, יציאה אחת.",
+        "יום 2: 2 חיתולים רטובים, 1-2 יציאות.",
+        "יום 3: 3 חיתולים רטובים, 1-3 יציאות.",
+        "יום 4 והלאה: 5-6 חיתולים רטובים, 3-4 יציאות.",
+      ],
+    },
+    {
+      tag: "הלבשה",
+      title: "איך מלבישים את התינוק/ת",
+      body: "עד גיל 6 שבועות: 2 שכבות בפלג הגוף העליון ושכבה אחת בפלג הגוף התחתון. בדקו את חום התינוק/ת בעורף ובחזה — לא בידיים ורגליים.",
+    },
+  ],
+  7: [
+    {
+      tag: "אחים",
+      title: "טיפים להתנהלות עם האחים בבית",
+      subtitle: "איך מכינים את הילדים הגדולים לאח/ות החדש/ה?",
+      body: "ההכנה מתחילה עוד לפני הלידה ומקלה על כל המשפחה:",
+      bullets: [
+        "תיווך לקראת סוף ההיריון — לספר מה עומד לקרות בשפה מותאמת לגיל.",
+        "שיתוף בהכנות: לארוז יחד את התיק, לבחור בגד או מתנה לתינוק/ת.",
+        "גיוס מערכת תמיכה — סבים, חברים או בייביסיטר לשעות הלידה ולימים שאחריה.",
+        "מתן תפקיד לאח/ות הגדול/ה: להביא חיתול, לשיר שיר, לעזור באמבטיה.",
+        "לצפות לרגרסיה טבעית (הרטבה, מוצק, היצמדות) — זה זמני ועובר עם קבלת תשומת לב.",
+      ],
+    },
+    {
+      tag: "תמיכה",
+      title: "בן/בת הזוג — היערכות מראש",
+      body: "הכינו את הבייביסיטר וקבלו החלטה אם להעביר את הצירים כשהילדים בבית או למצוא סידור. החלטה מוקדמת חוסכת לחץ ברגע האמת.",
+    },
+    {
+      tag: "כלל זהב",
+      title: "כללי זהב ללידה חוזרת",
+      body: "עדיף ללדת בבית חולים קרוב מאחר ולידה חוזרת יכולה להתפתח מהר. שמרו תיק ארוז ליד הדלת, דלק במכונית ורשימת טלפונים זמינה.",
+      highlight: true,
+    },
+  ],
+};
+
+export function getStageContent(birthType: BirthType): Record<number, StageContent> {
+  const result: Record<number, StageContent> = {};
+  for (const key of Object.keys(stageContent)) {
+    const id = Number(key);
+    const base = stageContent[id];
+    const extraCards = birthType === "repeat" ? repeatExtraCards[id] : undefined;
+    result[id] = {
+      cards: extraCards ? [...base.cards, ...extraCards] : base.cards,
+      extra: id === 3 ? <UrgencyCalculator birthType={birthType} /> : base.extra,
+    };
+  }
+  return result;
+}

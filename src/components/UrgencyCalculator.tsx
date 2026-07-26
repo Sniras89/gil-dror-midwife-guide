@@ -4,13 +4,16 @@ import { AlertTriangle, Clock, CheckCircle2, Info, RotateCcw } from "lucide-reac
 type WaterAnswer = "none" | "clear" | "meconium";
 type ContractionAnswer = "irregular" | "regular";
 type BleedingAnswer = "no" | "yes";
+type GbsAnswer = "no" | "yes";
 
-export function UrgencyCalculator() {
+export function UrgencyCalculator({ birthType = "first" }: { birthType?: "first" | "repeat" }) {
   const [water, setWater] = useState<WaterAnswer | null>(null);
   const [contractions, setContractions] = useState<ContractionAnswer | null>(null);
   const [bleeding, setBleeding] = useState<BleedingAnswer | null>(null);
+  const [gbs, setGbs] = useState<GbsAnswer | null>(null);
+  const isRepeat = birthType === "repeat";
 
-  const answered = water && contractions && bleeding;
+  const answered = water && contractions && bleeding && (!isRepeat || gbs);
 
   const result = (() => {
     if (!answered) return null;
@@ -19,6 +22,14 @@ export function UrgencyCalculator() {
         level: "red" as const,
         title: "יש להגיע בהקדם האפשרי לבית החולים!",
         body: "מדובר במצב שדורש בדיקה מיידית. אין להמתין — צאו לדרך עכשיו והתקשרו לחדר לידה בדרך.",
+        Icon: AlertTriangle,
+      };
+    }
+    if (isRepeat && gbs === "yes" && (water === "clear" || contractions === "regular")) {
+      return {
+        level: "red" as const,
+        title: "GBS חיובי — יש לצאת לבית החולים עכשיו",
+        body: "עם GBS חיובי לא ממתינים בבית: יש להגיע מיד לקבלת אנטיביוטיקה, במיוחד בלידה חוזרת שיכולה להתקדם מהר.",
         Icon: AlertTriangle,
       };
     }
@@ -34,7 +45,9 @@ export function UrgencyCalculator() {
       return {
         level: "green" as const,
         title: "זה הזמן לעבור לבית החולים!",
-        body: "הלידה הפעילה מתחילה. ארזו את הציוד, קחו נשימה עמוקה וצאו לדרך ברוגע.",
+        body: isRepeat
+          ? "הלידה הפעילה מתחילה. בלידה חוזרת הקצב מהיר — אל תחכו לרגע האחרון, סדרו את הילדים וצאו לדרך."
+          : "הלידה הפעילה מתחילה. ארזו את הציוד, קחו נשימה עמוקה וצאו לדרך ברוגע.",
         Icon: CheckCircle2,
       };
     }
@@ -50,6 +63,7 @@ export function UrgencyCalculator() {
     setWater(null);
     setContractions(null);
     setBleeding(null);
+    setGbs(null);
   };
 
   const resultStyles: Record<string, string> = {
@@ -68,7 +82,7 @@ export function UrgencyCalculator() {
         <h3 className="text-lg font-bold text-foreground">מתי מגיעים לבית החולים?</h3>
       </div>
       <p className="text-xs text-muted-foreground mb-5">
-        ענו על 3 שאלות קצרות לקבלת המלצה מותאמת.
+        ענו על {isRepeat ? 4 : 3} שאלות קצרות לקבלת המלצה מותאמת.
       </p>
 
       <Question
@@ -102,6 +116,18 @@ export function UrgencyCalculator() {
         value={bleeding}
         onChange={(v) => setBleeding(v as BleedingAnswer)}
       />
+      {isRepeat && (
+        <Question
+          n={4}
+          title="האם תוצאת בדיקת ה-GBS חיובית?"
+          options={[
+            { v: "no", label: "לא / לא ידוע" },
+            { v: "yes", label: "כן - GBS חיובי" },
+          ]}
+          value={gbs}
+          onChange={(v) => setGbs(v as GbsAnswer)}
+        />
+      )}
 
       {result && (
         <div className={`mt-5 rounded-2xl border-2 p-4 ${resultStyles[result.level]}`}>

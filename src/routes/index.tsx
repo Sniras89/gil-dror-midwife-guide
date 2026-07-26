@@ -152,12 +152,12 @@ function BirthTypeSelect({ onSelect }: { onSelect: (t: BirthType) => void }) {
     {
       type: "first" as BirthType,
       icon: Sprout,
-      desc: "הפעם הראשונה — נלווה אתכם צעד צעד, מהסימנים המקדימים ועד משכב הלידה.",
+      desc: "הפעם הראשונה - נלווה אתכם צעד צעד, מהסימנים המקדימים ועד משכב הלידה.",
     },
     {
       type: "repeat" as BirthType,
       icon: Repeat,
-      desc: "כבר עברתם את זה — תוכן מותאם לקצב מהיר, לאחים בבית ולהיערכות מראש.",
+      desc: "כבר עברתם את זה - תוכן מותאם לקצב מהיר עבור לידות חוזרות.",
     },
   ];
 

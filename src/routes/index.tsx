@@ -17,7 +17,14 @@ import {
   RefreshCw,
   Info,
 } from "lucide-react";
-import { getStageContent, type BirthType } from "../lib/stage-content";
+import {
+  getStageContent,
+  cardSummary,
+  type BirthType,
+  type ContentCard,
+} from "../lib/stage-content";
+import { ContentCardSheet } from "../components/ContentCardSheet";
+import { cardIconFor } from "../lib/card-icons";
 import { PackingChecklist } from "../components/PackingChecklist";
 import { UrgencyCalculator } from "../components/UrgencyCalculator";
 import { AboutModal } from "../components/AboutModal";
@@ -292,6 +299,7 @@ function Dashboard({
   const [activeId, setActiveId] = useState<number>(1);
   const [tab, setTab] = useState<"stages" | "checklist" | "urgency">("stages");
   const [aboutOpen, setAboutOpen] = useState(false);
+  const [openCard, setOpenCard] = useState<ContentCard | null>(null);
   const active = stages.find((s) => s.id === activeId)!;
   const ActiveIcon = active.icon;
   const content = getStageContent(birthType)[active.id];
@@ -424,55 +432,45 @@ function Dashboard({
 
         {content && (
           <div className="mt-5 space-y-3">
-            {content.cards.map((c) => (
-              <div
-                key={c.title}
-                className={`rounded-2xl px-5 py-4 shadow-sm transition ${
-                  c.highlight
-                    ? "bg-primary/10 border-2 border-primary/60"
-                    : "bg-card border border-border/60"
-                }`}
-              >
-                {c.tag && (
-                  <span className="inline-block text-[10px] font-semibold uppercase tracking-wider text-primary-foreground bg-primary/70 rounded-full px-2 py-0.5 mb-2">
-                    {c.tag}
-                  </span>
-                )}
-                <h4 className="text-base font-bold text-foreground leading-snug">
-                  {c.title}
-                </h4>
-                {c.subtitle && (
-                  <p className="mt-1 text-sm font-medium text-primary/80">
-                    {c.subtitle}
-                  </p>
-                )}
-                <p className="mt-1.5 text-sm leading-relaxed text-foreground/80 whitespace-pre-line">
-                  {c.body}
-                </p>
-                {c.bullets && (
-                  <ul className="mt-2.5 space-y-1.5 pr-4 list-disc marker:text-primary/70">
-                    {c.bullets.map((b) => (
-                      <li
-                        key={b}
-                        className="text-sm leading-relaxed text-foreground/80"
-                      >
-                        {b}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-                {c.image && (
-                  <div className="mt-3 mx-auto max-w-xs overflow-hidden rounded-2xl border border-border/60 bg-muted/40">
-                    <img
-                      src={c.image.url}
-                      alt={c.image.alt}
-                      className="w-full h-auto block"
-                      loading="lazy"
-                    />
+            {content.cards.map((c) => {
+              const CardIcon = cardIconFor(c.tag);
+              return (
+                <button
+                  key={c.title}
+                  type="button"
+                  onClick={() => setOpenCard(c)}
+                  aria-label={`${c.title} — לחצו להסבר המלא`}
+                  className={`w-full text-right rounded-2xl px-5 py-4 shadow-sm transition hover:shadow-md active:scale-[0.995] ${
+                    c.highlight
+                      ? "bg-primary/10 border-2 border-primary/60"
+                      : "bg-card border border-border/60 hover:border-primary/50"
+                  }`}
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 shrink-0 rounded-xl bg-secondary/60 flex items-center justify-center">
+                      <CardIcon className="w-5 h-5 text-foreground/70" strokeWidth={1.8} />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      {c.tag && (
+                        <span className="inline-block text-[10px] font-semibold tracking-wider text-primary-foreground bg-primary/70 rounded-full px-2 py-0.5 mb-1.5">
+                          {c.tag}
+                        </span>
+                      )}
+                      <h4 className="text-base font-bold text-foreground leading-snug">
+                        {c.title}
+                      </h4>
+                      <p className="mt-1.5 text-sm leading-relaxed text-foreground/75 line-clamp-3">
+                        {cardSummary(c)}
+                      </p>
+                    </div>
                   </div>
-                )}
-              </div>
-            ))}
+                  <span className="mt-3 flex items-center gap-1 text-[12px] font-semibold text-primary/90">
+                    לחצו להסבר המלא
+                    <ChevronLeft className="w-3.5 h-3.5" strokeWidth={2.5} />
+                  </span>
+                </button>
+              );
+            })}
             {content.extra && <div className="mt-2">{content.extra}</div>}
           </div>
         )}
@@ -498,6 +496,7 @@ function Dashboard({
       </main>
 
       <AboutModal open={aboutOpen} onClose={() => setAboutOpen(false)} />
+      <ContentCardSheet card={openCard} onClose={() => setOpenCard(null)} />
     </div>
   );
 }

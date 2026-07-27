@@ -12,10 +12,23 @@ export type ContentCard = {
   body: string;
   tag?: string;
   subtitle?: string;
+  /** תקציר קצר שמוצג על הכרטיס עצמו (ברירת מחדל: המשפט הראשון של body) */
+  summary?: string;
+  tip?: string;
   bullets?: string[];
   image?: { url: string; alt: string };
   highlight?: boolean;
 };
+
+/** תקציר של 1-2 משפטים לתצוגה על הכרטיס המצומצם */
+export function cardSummary(card: ContentCard): string {
+  if (card.summary) return card.summary;
+  const firstLine = card.body.split("\n")[0].trim();
+  const parts = firstLine.split(/(?<=[.!?])\s+/);
+  let out = parts[0] ?? firstLine;
+  if (out.length < 70 && parts[1]) out += " " + parts[1];
+  return out.length > 160 ? out.slice(0, 157).trimEnd() + "…" : out;
+}
 
 export type StageContent = {
   cards: ContentCard[];
@@ -49,7 +62,9 @@ const stageContent: Record<number, StageContent> = {
       {
         tag: "סימן מקדים",
         title: "פקק רירי",
-        body: "הפרשה סמיכה, לעיתים מעורבת בדם, שיוצאת בימים או שבועות שלפני הלידה. לא מחייב הגעה לבית החולים — סימן שהגוף מתחיל להתכונן.",
+        summary: "הפרשה סמיכה, לעיתים מעורבת בדימום עדין. סימן שהגוף מתכונן - אין צורך לגשת למיון.",
+        body: "מרקם ג'לי החוסם את כניסת צוואר הרחם ומונע כניסה של זיהומים לחלל הרחם. יציאתו בימים או בשבועות שלפני הלידה יכולה להיות מלווה בדימום עדין. אין צורך להתפנות למיון לאחר יציאת הפקק הרירי!",
+        tip: "אם הדימום הופך לדימום ממשי (כמו מחזור) או מלווה בכאב חד — יש לפנות לבית החולים.",
       },
       {
         tag: "סימן מקדים",

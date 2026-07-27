@@ -16,6 +16,7 @@ import {
   Sprout,
   RefreshCw,
   Info,
+  ChevronLeft,
 } from "lucide-react";
 import {
   getStageContent,

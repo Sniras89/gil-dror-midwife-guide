@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { X, AlertTriangle } from "lucide-react";
 import type { ContentCard } from "../lib/stage-content";
 import { cardIconFor } from "../lib/card-icons";
+import { renderRich } from "../lib/rich-text";
 
 export function ContentCardSheet({
   card,
@@ -69,20 +70,20 @@ export function ContentCardSheet({
             <div className="flex items-start gap-2.5 rounded-2xl bg-primary/10 border border-primary/50 px-4 py-3">
               <AlertTriangle className="w-4 h-4 mt-0.5 shrink-0 text-foreground/70" strokeWidth={2} />
               <p className="text-sm font-semibold leading-relaxed text-foreground/90">
-                חשוב לשים לב לכרטיס הזה — הוא נוגע לבטיחות ולתזמון.
+                חשוב לשים לב לכרטיס הזה - הוא נוגע לבטיחות ולתזמון.
               </p>
             </div>
           )}
 
           <p className="text-[15px] leading-relaxed text-foreground/85 whitespace-pre-line">
-            {card.body}
+            {renderRich(card.body)}
           </p>
 
           {card.bullets && (
             <ul className="space-y-2 pr-4 list-disc marker:text-primary/70">
               {card.bullets.map((b) => (
                 <li key={b} className="text-[15px] leading-relaxed text-foreground/85">
-                  {b}
+                  {renderRich(b)}
                 </li>
               ))}
             </ul>
@@ -98,6 +99,19 @@ export function ContentCardSheet({
           {card.image && (
             <div className="mx-auto max-w-xs overflow-hidden rounded-2xl border border-border/60 bg-muted/40">
               <img src={card.image.url} alt={card.image.alt} className="w-full h-auto block" loading="lazy" />
+            </div>
+          )}
+
+          {card.images && card.images.length > 0 && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {card.images.map((img) => (
+                <div
+                  key={img.url}
+                  className="overflow-hidden rounded-2xl border border-border/60 bg-muted/40"
+                >
+                  <img src={img.url} alt={img.alt} className="w-full h-auto block" loading="lazy" />
+                </div>
+              ))}
             </div>
           )}
         </div>

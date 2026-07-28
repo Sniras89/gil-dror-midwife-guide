@@ -21,10 +21,12 @@ import {
 import {
   getStageContent,
   cardSummary,
+  cardHasDetail,
   type BirthType,
   type ContentCard,
 } from "../lib/stage-content";
 import { ContentCardSheet } from "../components/ContentCardSheet";
+import { renderRich, stripRich } from "../lib/rich-text";
 import { cardIconFor } from "../lib/card-icons";
 import { PackingChecklist } from "../components/PackingChecklist";
 import { UrgencyCalculator } from "../components/UrgencyCalculator";
@@ -379,7 +381,7 @@ function Dashboard({
         </div>
 
         <div className="-mx-5 px-5 overflow-x-auto scrollbar-hide">
-          <ol className="flex gap-2.5 pb-3 min-w-max" dir="rtl">
+          <ol className="flex items-stretch gap-2.5 pb-3 min-w-max" dir="rtl">
             {stages.map((s) => {
               const Icon = s.icon;
               const isActive = s.id === activeId;
@@ -387,7 +389,7 @@ function Dashboard({
                 <li key={s.id}>
                   <button
                     onClick={() => setActiveId(s.id)}
-                    className={`flex flex-col items-center gap-1.5 min-w-[76px] rounded-2xl px-3 py-3 transition border ${
+                    className={`h-full w-[84px] flex flex-col items-center justify-start gap-1.5 rounded-2xl px-3 py-3 transition border ${
                       isActive
                         ? "bg-primary text-primary-foreground border-primary shadow-md"
                         : "bg-card text-foreground/80 border-border/60 hover:border-primary/50"
@@ -401,7 +403,7 @@ function Dashboard({
                       <Icon className="w-4.5 h-4.5" strokeWidth={2} />
                     </div>
                     <span className="text-[10px] font-semibold">שלב {s.id}</span>
-                    <span className="text-[11px] leading-tight text-center line-clamp-2 max-w-[68px]">
+                    <span className="block w-full text-[11px] leading-tight text-center line-clamp-2">
                       {s.title}
                     </span>
                   </button>
@@ -411,22 +413,22 @@ function Dashboard({
           </ol>
         </div>
 
-        <article className="mt-6 bg-card rounded-3xl border border-border/60 shadow-[0_10px_40px_-20px_rgba(180,120,120,0.2)] p-6 sm:p-8">
+        <article className="mt-6 rounded-3xl border-2 border-primary/50 bg-gradient-to-b from-primary/15 to-card shadow-[0_14px_44px_-20px_rgba(180,120,120,0.35)] p-6 sm:p-8">
           <div className="flex items-start gap-4">
-            <div className="w-14 h-14 shrink-0 rounded-2xl bg-secondary/60 flex items-center justify-center">
-              <ActiveIcon className="w-6 h-6 text-foreground/75" strokeWidth={1.8} />
+            <div className="w-14 h-14 shrink-0 rounded-2xl bg-primary/30 flex items-center justify-center">
+              <ActiveIcon className="w-7 h-7 text-foreground/80" strokeWidth={1.8} />
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-xs font-semibold text-muted-foreground mb-1">
+              <p className="text-[11px] font-bold tracking-wider text-primary-foreground bg-primary/70 rounded-full px-2 py-0.5 inline-block mb-1.5">
                 שלב {active.id}
               </p>
-              <h3 className="text-xl sm:text-2xl font-bold text-foreground leading-snug">
+              <h3 className="text-2xl sm:text-3xl font-extrabold text-foreground leading-snug">
                 {active.title}
               </h3>
             </div>
           </div>
 
-          <p className="mt-5 text-[15px] leading-relaxed text-foreground/85">
+          <p className="mt-5 text-base sm:text-[17px] leading-relaxed text-foreground/90">
             {active.intro}
           </p>
         </article>
@@ -435,12 +437,18 @@ function Dashboard({
           <div className="mt-5 space-y-3">
             {content.cards.map((c) => {
               const CardIcon = cardIconFor(c.tag);
+              const expandable = cardHasDetail(c);
+              const Wrapper = expandable ? "button" : "div";
               return (
-                <button
+                <Wrapper
                   key={c.title}
-                  type="button"
-                  onClick={() => setOpenCard(c)}
-                  aria-label={`${c.title} — לחצו להסבר המלא`}
+                  {...(expandable
+                    ? {
+                        type: "button" as const,
+                        onClick: () => setOpenCard(c),
+                        "aria-label": `${c.title} - לחצו להסבר המלא`,
+                      }
+                    : {})}
                   className={`w-full text-right rounded-2xl px-5 py-4 shadow-sm transition hover:shadow-md active:scale-[0.995] ${
                     c.highlight
                       ? "bg-primary/10 border-2 border-primary/60"
@@ -460,16 +468,22 @@ function Dashboard({
                       <h4 className="text-base font-bold text-foreground leading-snug">
                         {c.title}
                       </h4>
-                      <p className="mt-1.5 text-sm leading-relaxed text-foreground/75 line-clamp-3">
-                        {cardSummary(c)}
+                      <p
+                        className={`mt-1.5 text-sm leading-relaxed text-foreground/75 whitespace-pre-line ${
+                          expandable ? "line-clamp-3" : ""
+                        }`}
+                      >
+                        {expandable ? stripRich(cardSummary(c)) : renderRich(c.body)}
                       </p>
                     </div>
                   </div>
-                  <span className="mt-3 flex items-center gap-1 text-[12px] font-semibold text-primary/90">
-                    לחצו להסבר המלא
-                    <ChevronLeft className="w-3.5 h-3.5" strokeWidth={2.5} />
-                  </span>
-                </button>
+                  {expandable && (
+                    <span className="mt-3 flex items-center gap-1 text-[12px] font-semibold text-primary/90">
+                      לחצו להסבר המלא
+                      <ChevronLeft className="w-3.5 h-3.5" strokeWidth={2.5} />
+                    </span>
+                  )}
+                </Wrapper>
               );
             })}
             {content.extra && <div className="mt-2">{content.extra}</div>}

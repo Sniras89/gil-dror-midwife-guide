@@ -21,14 +21,14 @@ export function UrgencyCalculator({ birthType = "first" }: { birthType?: "first"
       return {
         level: "red" as const,
         title: "יש להגיע בהקדם האפשרי לבית החולים!",
-        body: "מדובר במצב שדורש בדיקה מיידית. אין להמתין — צאו לדרך עכשיו והתקשרו לחדר לידה בדרך.",
+        body: "מדובר במצב שדורש בדיקה מיידית. אין להמתין - צאו לדרך עכשיו והתקשרו לחדר לידה בדרך.",
         Icon: AlertTriangle,
       };
     }
     if (isRepeat && gbs === "yes" && (water === "clear" || contractions === "regular")) {
       return {
         level: "red" as const,
-        title: "GBS חיובי — יש לצאת לבית החולים עכשיו",
+        title: "GBS חיובי - יש לצאת לבית החולים עכשיו",
         body: "עם GBS חיובי לא ממתינים בבית: יש להגיע מיד לקבלת אנטיביוטיקה, במיוחד בלידה חוזרת שיכולה להתקדם מהר.",
         Icon: AlertTriangle,
       };
@@ -46,7 +46,7 @@ export function UrgencyCalculator({ birthType = "first" }: { birthType?: "first"
         level: "green" as const,
         title: "זה הזמן לעבור לבית החולים!",
         body: isRepeat
-          ? "הלידה הפעילה מתחילה. בלידה חוזרת הקצב מהיר — אל תחכו לרגע האחרון, סדרו את הילדים וצאו לדרך."
+          ? "הלידה הפעילה מתחילה. בלידה חוזרת הקצב מהיר - אל תחכו לרגע האחרון, סדרו את הילדים וצאו לדרך."
           : "הלידה הפעילה מתחילה. ארזו את הציוד, קחו נשימה עמוקה וצאו לדרך ברוגע.",
         Icon: CheckCircle2,
       };
@@ -54,7 +54,7 @@ export function UrgencyCalculator({ birthType = "first" }: { birthType?: "first"
     return {
       level: "blue" as const,
       title: "מומלץ להישאר בסביבה הביתית והמרגיעה",
-      body: "בשלב זה עדיף להישאר בבית — לנוח, לאכול, להתקלח חם ולהתחיל להאזין לגוף.",
+      body: "בשלב זה עדיף להישאר בבית - לנוח, לאכול, להתקלח חם ולהתחיל להאזין לגוף.",
       Icon: Info,
     };
   })();

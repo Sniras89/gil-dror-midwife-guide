@@ -155,7 +155,7 @@ export function PackingChecklist() {
           </span>
         </div>
         <p className="text-xs text-muted-foreground mb-3">
-          סמנו את הפריטים ככל שהם מוכנים. אפשר להוסיף ולמחוק פריטים — הרשימה נשמרת אוטומטית במכשיר שלכם.
+          סמנו את הפריטים ככל שהם מוכנים. אפשר להוסיף ולמחוק פריטים - הרשימה נשמרת אוטומטית במכשיר שלכם.
         </p>
         <ProgressBar pct={overallPct} />
       </div>

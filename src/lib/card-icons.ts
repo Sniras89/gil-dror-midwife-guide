@@ -51,7 +51,7 @@ const map: Record<string, LucideIcon> = {
   "לידה חוזרת": Sparkles,
   היערכות: ClipboardCheck,
   לחיצות: Hand,
-  הבצבוץ: Baby,
+  הכתרה: Baby,
   התנהגות: Users,
 };
 

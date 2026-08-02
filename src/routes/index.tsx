@@ -54,7 +54,7 @@ export const Route = createFileRoute("/")({
 
 const STORAGE_KEY = "birth-guide-access";
 const BIRTH_TYPE_KEY = "birth-guide-birth-type";
-const ACCESS_CODE = "Celia2026";
+const ACCESS_CODE = "2026";
 
 const birthTypeLabels: Record<BirthType, string> = {
   first: "לידה ראשונה",

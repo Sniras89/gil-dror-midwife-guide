@@ -31,6 +31,10 @@ import { cardIconFor } from "../lib/card-icons";
 import { PackingChecklist } from "../components/PackingChecklist";
 import { UrgencyCalculator } from "../components/UrgencyCalculator";
 import { AboutModal } from "../components/AboutModal";
+import {
+  ContractionTimerFab,
+  ContractionTimerSheet,
+} from "../components/ContractionTimer";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -302,6 +306,7 @@ function Dashboard({
   const [activeId, setActiveId] = useState<number>(1);
   const [tab, setTab] = useState<"stages" | "checklist" | "urgency">("stages");
   const [aboutOpen, setAboutOpen] = useState(false);
+  const [timerOpen, setTimerOpen] = useState(false);
   const [openCard, setOpenCard] = useState<ContentCard | null>(null);
   const active = stages.find((s) => s.id === activeId)!;
   const ActiveIcon = active.icon;
@@ -512,6 +517,16 @@ function Dashboard({
 
       <AboutModal open={aboutOpen} onClose={() => setAboutOpen(false)} />
       <ContentCardSheet card={openCard} onClose={() => setOpenCard(null)} />
+      {!timerOpen && <ContractionTimerFab onClick={() => setTimerOpen(true)} />}
+      <ContractionTimerSheet
+        open={timerOpen}
+        onClose={() => setTimerOpen(false)}
+        onGoToStage3={() => {
+          setTab("stages");
+          setActiveId(3);
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }}
+      />
     </div>
   );
 }

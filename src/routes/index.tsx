@@ -517,6 +517,16 @@ function Dashboard({
 
       <AboutModal open={aboutOpen} onClose={() => setAboutOpen(false)} />
       <ContentCardSheet card={openCard} onClose={() => setOpenCard(null)} />
+      {!timerOpen && <ContractionTimerFab onClick={() => setTimerOpen(true)} />}
+      <ContractionTimerSheet
+        open={timerOpen}
+        onClose={() => setTimerOpen(false)}
+        onGoToStage3={() => {
+          setTab("stages");
+          setActiveId(3);
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }}
+      />
     </div>
   );
 }

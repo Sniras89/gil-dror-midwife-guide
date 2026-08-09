@@ -135,7 +135,7 @@ export function ContractionTimerSheet({
       <div
         role="dialog"
         aria-modal="true"
-        aria-label="מחשב ונשיין צירים"
+        aria-label="מחשבון צירים"
         className="relative w-full sm:max-w-lg max-h-[92vh] flex flex-col bg-card border border-border/60 rounded-t-3xl sm:rounded-3xl shadow-[0_20px_60px_-20px_rgba(180,120,120,0.35)] animate-in slide-in-from-bottom-8 sm:zoom-in-95 fade-in duration-300"
       >
         <div className="shrink-0 pt-3">
@@ -147,7 +147,7 @@ export function ContractionTimerSheet({
             <Timer className="w-5 h-5 text-foreground/75" strokeWidth={2} />
           </div>
           <h3 className="flex-1 min-w-0 text-lg font-bold text-foreground leading-snug">
-            מחשב ונשיין צירים
+            מחשבון צירים
           </h3>
           <button
             onClick={() => {

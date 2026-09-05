@@ -1,6 +1,6 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { ChevronLeft, LifeBuoy, ArrowRight, LogOut } from "lucide-react";
+import { ChevronLeft, LifeBuoy, LogOut } from "lucide-react";
 import { AccessGate } from "../components/AccessGate";
 import { useAccessUnlock } from "../lib/access-gate";
 import { erSections } from "../lib/er-content";
@@ -8,6 +8,7 @@ import { cardHasDetail, cardSummary, type ContentCard } from "../lib/stage-conte
 import { ContentCardSheet } from "../components/ContentCardSheet";
 import { renderRich, stripRich } from "../lib/rich-text";
 import { cardIconFor } from "../lib/card-icons";
+import { BottomNav, BOTTOM_NAV_SPACER_CLASS } from "../components/BottomNav";
 
 // TEMP (ספטמבר 2026): משתמש באותו storageKey כמו דשבורד הלידה ("/app"), כך
 // שהזנת הקוד באחד משני המקומות פותחת את שניהם יחד - זו בקשה מפורשת של הלקוח
@@ -63,7 +64,11 @@ function ErPage() {
 }
 
 function ErGuide({ onLogout }: { onLogout: () => void }) {
+  const [activeId, setActiveId] = useState<string>(erSections[0].id);
   const [openCard, setOpenCard] = useState<ContentCard | null>(null);
+
+  const active = erSections.find((s) => s.id === activeId) ?? erSections[0];
+  const activeIndex = erSections.findIndex((s) => s.id === active.id);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-accent/30 via-background to-secondary/20">
@@ -82,26 +87,17 @@ function ErGuide({ onLogout }: { onLogout: () => void }) {
               </p>
             </div>
           </div>
-          <div className="shrink-0 flex items-center gap-1.5">
-            <Link
-              to="/app"
-              className="flex items-center gap-1.5 text-[11px] font-medium text-foreground/80 hover:text-foreground bg-secondary/60 hover:bg-secondary rounded-full px-2.5 py-2 transition"
-            >
-              <ArrowRight className="w-3.5 h-3.5" />
-              <span>הכנה ללידה</span>
-            </Link>
-            <button
-              onClick={onLogout}
-              className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground bg-muted rounded-full px-2.5 py-2 transition"
-              aria-label="יציאה"
-            >
-              <LogOut className="w-3.5 h-3.5" />
-            </button>
-          </div>
+          <button
+            onClick={onLogout}
+            className="shrink-0 flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground bg-muted rounded-full px-2.5 py-2 transition"
+            aria-label="יציאה"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+          </button>
         </div>
       </header>
 
-      <main className="max-w-2xl mx-auto px-5 pt-6 pb-16">
+      <main className={`max-w-2xl mx-auto px-5 pt-6 ${BOTTOM_NAV_SPACER_CLASS}`}>
         <div className="rounded-2xl bg-primary/10 border-2 border-primary/50 px-5 py-4">
           <p className="text-sm leading-relaxed text-foreground/85">
             המדריך הזה הוא כלי עזר וסיכום מהיר - הוא אינו תחליף לתרגול מעשי. מיומנות
@@ -110,74 +106,124 @@ function ErGuide({ onLogout }: { onLogout: () => void }) {
           </p>
         </div>
 
-        <div className="mt-6 space-y-8">
-          {erSections.map((section) => (
-            <section key={section.id}>
-              <h2 className="text-xl font-extrabold text-foreground leading-snug">
-                {section.title}
-              </h2>
-              <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
-                {section.intro}
-              </p>
+        <div className="mt-6 mb-2 flex items-baseline justify-between">
+          <h2 className="text-lg font-semibold text-foreground">נושאים</h2>
+          <span className="text-xs text-muted-foreground">
+            {activeIndex + 1} מתוך {erSections.length}
+          </span>
+        </div>
 
-              <div className="mt-4 space-y-3">
-                {section.cards.map((c) => {
-                  const CardIcon = cardIconFor(c.tag);
-                  const expandable = cardHasDetail(c);
-                  const Wrapper = expandable ? "button" : "div";
-                  return (
-                    <Wrapper
-                      key={c.title}
-                      {...(expandable
-                        ? {
-                            type: "button" as const,
-                            onClick: () => setOpenCard(c),
-                            "aria-label": `${c.title} - לחצו להסבר המלא`,
-                          }
-                        : {})}
-                      className={`w-full text-right rounded-2xl px-5 py-4 shadow-sm transition hover:shadow-md active:scale-[0.995] ${
-                        c.highlight
-                          ? "bg-primary/10 border-2 border-primary/60"
-                          : "bg-card border border-border/60 hover:border-primary/50"
+        <div className="-mx-5 px-5 overflow-x-auto scrollbar-hide">
+          <ol className="flex items-stretch gap-2.5 pb-3 min-w-max" dir="rtl">
+            {erSections.map((s, i) => {
+              const isActive = s.id === active.id;
+              return (
+                <li key={s.id}>
+                  <button
+                    onClick={() => setActiveId(s.id)}
+                    className={`h-full w-[92px] flex flex-col items-center justify-start gap-1.5 rounded-2xl px-3 py-3 transition border ${
+                      isActive
+                        ? "bg-primary text-primary-foreground border-primary shadow-md"
+                        : "bg-card text-foreground/80 border-border/60 hover:border-primary/50"
+                    }`}
+                  >
+                    <span className="text-[10px] font-semibold">{i + 1}</span>
+                    <span className="block w-full text-[11px] leading-tight text-center line-clamp-3">
+                      {s.title}
+                    </span>
+                  </button>
+                </li>
+              );
+            })}
+          </ol>
+        </div>
+
+        <article className="mt-4 rounded-3xl border-2 border-primary/50 bg-gradient-to-b from-primary/15 to-card shadow-[0_14px_44px_-20px_rgba(180,120,120,0.35)] p-6 sm:p-8">
+          <h3 className="text-2xl font-extrabold text-foreground leading-snug">
+            {active.title}
+          </h3>
+          <p className="mt-3 text-base leading-relaxed text-foreground/90">
+            {active.intro}
+          </p>
+        </article>
+
+        <div className="mt-5 space-y-3">
+          {active.cards.map((c) => {
+            const CardIcon = cardIconFor(c.tag);
+            const expandable = cardHasDetail(c);
+            const Wrapper = expandable ? "button" : "div";
+            return (
+              <Wrapper
+                key={c.title}
+                {...(expandable
+                  ? {
+                      type: "button" as const,
+                      onClick: () => setOpenCard(c),
+                      "aria-label": `${c.title} - לחצו להסבר המלא`,
+                    }
+                  : {})}
+                className={`w-full text-right rounded-2xl px-5 py-4 shadow-sm transition hover:shadow-md active:scale-[0.995] ${
+                  c.highlight
+                    ? "bg-primary/10 border-2 border-primary/60"
+                    : "bg-card border border-border/60 hover:border-primary/50"
+                }`}
+              >
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 shrink-0 rounded-xl bg-secondary/60 flex items-center justify-center">
+                    <CardIcon className="w-5 h-5 text-foreground/70" strokeWidth={1.8} />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    {c.tag && (
+                      <span className="inline-block text-[10px] font-semibold tracking-wider text-primary-foreground bg-primary/70 rounded-full px-2 py-0.5 mb-1.5">
+                        {c.tag}
+                      </span>
+                    )}
+                    <h4 className="text-base font-bold text-foreground leading-snug">
+                      {c.title}
+                    </h4>
+                    <p
+                      className={`mt-1.5 text-sm leading-relaxed text-foreground/75 whitespace-pre-line ${
+                        expandable ? "line-clamp-3" : ""
                       }`}
                     >
-                      <div className="flex items-start gap-3">
-                        <div className="w-10 h-10 shrink-0 rounded-xl bg-secondary/60 flex items-center justify-center">
-                          <CardIcon
-                            className="w-5 h-5 text-foreground/70"
-                            strokeWidth={1.8}
-                          />
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          {c.tag && (
-                            <span className="inline-block text-[10px] font-semibold tracking-wider text-primary-foreground bg-primary/70 rounded-full px-2 py-0.5 mb-1.5">
-                              {c.tag}
-                            </span>
-                          )}
-                          <h3 className="text-base font-bold text-foreground leading-snug">
-                            {c.title}
-                          </h3>
-                          <p
-                            className={`mt-1.5 text-sm leading-relaxed text-foreground/75 whitespace-pre-line ${
-                              expandable ? "line-clamp-3" : ""
-                            }`}
-                          >
-                            {expandable ? stripRich(cardSummary(c)) : renderRich(c.body)}
-                          </p>
-                        </div>
-                      </div>
-                      {expandable && (
-                        <span className="mt-3 flex items-center gap-1 text-[12px] font-semibold text-primary/90">
-                          לחצו להסבר המלא
-                          <ChevronLeft className="w-3.5 h-3.5" strokeWidth={2.5} />
-                        </span>
-                      )}
-                    </Wrapper>
-                  );
-                })}
-              </div>
-            </section>
-          ))}
+                      {expandable ? stripRich(cardSummary(c)) : renderRich(c.body)}
+                    </p>
+                  </div>
+                </div>
+                {expandable && (
+                  <span className="mt-3 flex items-center gap-1 text-[12px] font-semibold text-primary/90">
+                    לחצו להסבר המלא
+                    <ChevronLeft className="w-3.5 h-3.5" strokeWidth={2.5} />
+                  </span>
+                )}
+              </Wrapper>
+            );
+          })}
+        </div>
+
+        <div className="mt-6 flex items-center justify-between gap-3">
+          <button
+            onClick={() => {
+              if (activeIndex > 0) setActiveId(erSections[activeIndex - 1].id);
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            disabled={activeIndex === 0}
+            className="text-sm font-medium text-foreground/70 disabled:opacity-30 disabled:pointer-events-none hover:text-foreground transition"
+          >
+            הקודם
+          </button>
+          <button
+            onClick={() => {
+              if (activeIndex < erSections.length - 1)
+                setActiveId(erSections[activeIndex + 1].id);
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            disabled={activeIndex === erSections.length - 1}
+            className="flex items-center gap-1 rounded-2xl bg-primary text-primary-foreground font-semibold px-5 py-3 text-sm disabled:opacity-40 disabled:pointer-events-none hover:opacity-90 transition"
+          >
+            הנושא הבא
+            <ChevronLeft className="w-4 h-4" strokeWidth={2.5} />
+          </button>
         </div>
 
         <div className="mt-10 rounded-3xl border border-border/60 bg-card px-6 py-6 text-center">
@@ -190,12 +236,13 @@ function ErGuide({ onLogout }: { onLogout: () => void }) {
             rel="noopener noreferrer"
             className="mt-4 inline-flex items-center justify-center rounded-2xl bg-primary text-primary-foreground font-semibold px-6 py-3 text-sm shadow-sm hover:opacity-90 active:scale-[0.99] transition"
           >
-            לפרטים על הקורס עם גיל
+            לפרטים על קורס עזרה ראשונה עם גיל
           </a>
         </div>
       </main>
 
       <ContentCardSheet card={openCard} onClose={() => setOpenCard(null)} />
+      <BottomNav />
     </div>
   );
 }

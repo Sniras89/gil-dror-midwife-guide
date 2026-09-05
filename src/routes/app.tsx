@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import {
   Heart,
@@ -17,7 +17,6 @@ import {
   RefreshCw,
   Info,
   ChevronLeft,
-  LifeBuoy,
 } from "lucide-react";
 import {
   getStageContent,
@@ -38,6 +37,7 @@ import {
 } from "../components/ContractionTimer";
 import { AccessGate } from "../components/AccessGate";
 import { useAccessUnlock } from "../lib/access-gate";
+import { BottomNav, BOTTOM_NAV_SPACER_CLASS } from "../components/BottomNav";
 
 // TEMP (ספטמבר 2026): אותו storageKey כמו מדריך ה-ER ("/er") - ראו הערה שם.
 const STORAGE_KEY = "birth-guide-access";
@@ -259,13 +259,6 @@ function Dashboard({
             </div>
           </div>
           <div className="shrink-0 flex items-center gap-1.5">
-            <Link
-              to="/er"
-              className="flex items-center gap-1.5 text-[11px] font-medium text-foreground/80 hover:text-foreground bg-secondary/60 hover:bg-secondary rounded-full px-2.5 py-2 transition"
-            >
-              <LifeBuoy className="w-3.5 h-3.5" />
-              <span>עזרה ראשונה</span>
-            </Link>
             <button
               onClick={() => setAboutOpen(true)}
               className="flex items-center gap-1.5 text-[11px] font-medium text-foreground/80 hover:text-foreground bg-secondary/60 hover:bg-secondary rounded-full px-2.5 py-2 transition"
@@ -300,7 +293,7 @@ function Dashboard({
         </div>
       </header>
 
-      <main className="max-w-2xl mx-auto px-5 pt-6 pb-16">
+      <main className={`max-w-2xl mx-auto px-5 pt-6 ${BOTTOM_NAV_SPACER_CLASS}`}>
         {tab === "checklist" && <PackingChecklist />}
 
         {tab === "urgency" && (
@@ -463,6 +456,7 @@ function Dashboard({
           window.scrollTo({ top: 0, behavior: "smooth" });
         }}
       />
+      <BottomNav />
     </div>
   );
 }

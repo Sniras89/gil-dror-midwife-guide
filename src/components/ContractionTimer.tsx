@@ -39,7 +39,7 @@ export function ContractionTimerFab({ onClick }: { onClick: () => void }) {
     <button
       onClick={onClick}
       aria-label="טיימר צירים"
-      className="fixed z-40 bottom-5 left-4 flex items-center gap-2 rounded-full bg-primary text-primary-foreground pr-4 pl-3.5 py-3 shadow-[0_14px_34px_-10px_rgba(180,120,120,0.75)] hover:opacity-95 active:scale-95 transition"
+      className="fixed z-40 bottom-24 left-4 flex items-center gap-2 rounded-full bg-primary text-primary-foreground pr-4 pl-3.5 py-3 shadow-[0_14px_34px_-10px_rgba(180,120,120,0.75)] hover:opacity-95 active:scale-95 transition"
     >
       <Timer className="w-5 h-5" strokeWidth={2.2} />
       <span className="text-sm font-bold">טיימר צירים</span>

@@ -293,7 +293,7 @@ function Dashboard({
         </div>
       </header>
 
-      <main className="max-w-2xl mx-auto px-5 pt-6 pb-16">
+      <main className={`max-w-2xl mx-auto px-5 pt-6 ${BOTTOM_NAV_SPACER_CLASS}`}>
         {tab === "checklist" && <PackingChecklist />}
 
         {tab === "urgency" && (
@@ -456,6 +456,7 @@ function Dashboard({
           window.scrollTo({ top: 0, behavior: "smooth" });
         }}
       />
+      <BottomNav />
     </div>
   );
 }

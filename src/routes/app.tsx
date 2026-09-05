@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import {
   Heart,
@@ -17,7 +17,6 @@ import {
   RefreshCw,
   Info,
   ChevronLeft,
-  LifeBuoy,
 } from "lucide-react";
 import {
   getStageContent,
@@ -38,6 +37,7 @@ import {
 } from "../components/ContractionTimer";
 import { AccessGate } from "../components/AccessGate";
 import { useAccessUnlock } from "../lib/access-gate";
+import { BottomNav, BOTTOM_NAV_SPACER_CLASS } from "../components/BottomNav";
 
 // TEMP (ספטמבר 2026): אותו storageKey כמו מדריך ה-ER ("/er") - ראו הערה שם.
 const STORAGE_KEY = "birth-guide-access";

@@ -259,13 +259,6 @@ function Dashboard({
             </div>
           </div>
           <div className="shrink-0 flex items-center gap-1.5">
-            <Link
-              to="/er"
-              className="flex items-center gap-1.5 text-[11px] font-medium text-foreground/80 hover:text-foreground bg-secondary/60 hover:bg-secondary rounded-full px-2.5 py-2 transition"
-            >
-              <LifeBuoy className="w-3.5 h-3.5" />
-              <span>עזרה ראשונה</span>
-            </Link>
             <button
               onClick={() => setAboutOpen(true)}
               className="flex items-center gap-1.5 text-[11px] font-medium text-foreground/80 hover:text-foreground bg-secondary/60 hover:bg-secondary rounded-full px-2.5 py-2 transition"

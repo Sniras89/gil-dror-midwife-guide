@@ -67,9 +67,14 @@ function Landing() {
           <p className="mt-2 text-sm text-foreground/80 leading-relaxed">
             אשמח ללוות אתכם גם באופן אישי, בבית שלכם.
           </p>
-          <p className="mt-4 inline-flex items-center justify-center rounded-2xl bg-primary text-primary-foreground font-semibold px-6 py-3 text-sm shadow-sm">
+          <a
+            href="https://gil-dror-midwife.lovable.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-4 inline-flex items-center justify-center rounded-2xl bg-primary text-primary-foreground font-semibold px-6 py-3 text-sm shadow-sm hover:opacity-90 active:scale-[0.99] transition"
+          >
             ליצירת קשר ופרטים נוספים
-          </p>
+          </a>
         </section>
 
         <section className="mt-6 rounded-2xl bg-muted/70 border border-border/60 px-5 py-4">

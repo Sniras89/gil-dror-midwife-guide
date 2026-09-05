@@ -184,12 +184,14 @@ function ErGuide({ onLogout }: { onLogout: () => void }) {
           <p className="text-sm font-semibold text-foreground leading-relaxed">
             רוצים להתאמן על זה בפועל, עם בובה ותרגול מודרך?
           </p>
-          <Link
-            to="/"
+          <a
+            href="https://gil-dror-midwife.lovable.app/#first-aid-section"
+            target="_blank"
+            rel="noopener noreferrer"
             className="mt-4 inline-flex items-center justify-center rounded-2xl bg-primary text-primary-foreground font-semibold px-6 py-3 text-sm shadow-sm hover:opacity-90 active:scale-[0.99] transition"
           >
             לפרטים על הקורס עם גיל
-          </Link>
+          </a>
         </div>
       </main>
 

@@ -91,7 +91,7 @@ export function ContentCardSheet({
 
           {card.tip && (
             <div className="rounded-2xl bg-secondary/50 border border-border/60 px-4 py-3">
-              <p className="text-xs font-bold text-foreground/70 mb-1">טיפ</p>
+              <p className="text-xs font-bold text-foreground/70 mb-1">שימו לב!</p>
               <p className="text-sm leading-relaxed text-foreground/85">{card.tip}</p>
             </div>
           )}

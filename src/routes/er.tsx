@@ -202,28 +202,29 @@ function ErGuide({ onLogout }: { onLogout: () => void }) {
         </div>
 
         <div className="mt-6 flex items-center justify-between gap-3">
-          <button
-            onClick={() => {
-              if (activeIndex > 0) setActiveId(erSections[activeIndex - 1].id);
-              window.scrollTo({ top: 0, behavior: "smooth" });
-            }}
-            disabled={activeIndex === 0}
-            className="text-sm font-medium text-foreground/70 disabled:opacity-30 disabled:pointer-events-none hover:text-foreground transition"
-          >
-            הקודם
-          </button>
-          <button
-            onClick={() => {
-              if (activeIndex < erSections.length - 1)
+          {activeIndex > 0 && (
+            <button
+              onClick={() => {
+                setActiveId(erSections[activeIndex - 1].id);
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+              className="text-sm font-medium text-foreground/70 hover:text-foreground transition"
+            >
+              הקודם
+            </button>
+          )}
+          {activeIndex < erSections.length - 1 && (
+            <button
+              onClick={() => {
                 setActiveId(erSections[activeIndex + 1].id);
-              window.scrollTo({ top: 0, behavior: "smooth" });
-            }}
-            disabled={activeIndex === erSections.length - 1}
-            className="flex items-center gap-1 rounded-2xl bg-primary text-primary-foreground font-semibold px-5 py-3 text-sm disabled:opacity-40 disabled:pointer-events-none hover:opacity-90 transition"
-          >
-            הנושא הבא
-            <ChevronLeft className="w-4 h-4" strokeWidth={2.5} />
-          </button>
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+              className="ms-auto flex items-center gap-1 rounded-2xl bg-primary text-primary-foreground font-semibold px-5 py-3 text-sm hover:opacity-90 transition"
+            >
+              הנושא הבא
+              <ChevronLeft className="w-4 h-4" strokeWidth={2.5} />
+            </button>
+          )}
         </div>
 
         <div className="mt-10 rounded-3xl border border-border/60 bg-card px-6 py-6 text-center">

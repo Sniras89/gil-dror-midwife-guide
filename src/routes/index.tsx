@@ -119,7 +119,7 @@ function Landing() {
                   עזרה ראשונה ליילודים
                 </span>
                 <span className="block text-xs text-muted-foreground mt-1 leading-relaxed">
-                  מדריך חירום - למי שיש קוד גישה
+                  מדריך עזרה ראשונה - פתוח לכולם - בחינם
                 </span>
               </span>
               <ChevronLeft className="w-5 h-5 shrink-0 text-foreground/50" strokeWidth={2.5} />

@@ -1,4 +1,9 @@
 import type { ContentCard } from "./stage-content";
+import safeBottleFeeding from "../assets/safe-bottle-feeding.png.asset.json";
+import infantBackBlows from "../assets/infant-back-blows.png.asset.json";
+import infantChestThrusts from "../assets/infant-chest-thrusts.png.asset.json";
+import infantCprStep4 from "../assets/infant-cpr-step-4.png.asset.json";
+import infantCprStep5 from "../assets/infant-cpr-step-5.png.asset.json";
 
 export type ErSection = {
   id: string;
@@ -24,6 +29,10 @@ export const erSections: ErSection[] = [
           "עושים הפסקות יזומות, מרימים לתנוחה מוגבהת ומנסים להוציא גרעפס.",
         ],
         tip: "סימנים קלאסיים לכך שצריך להפסיק ולהוציא גרעפס: הקשתה של הגב, הרמת הגבות, דחיפה של הראש אחורה.",
+        image: {
+          url: safeBottleFeeding.url,
+          alt: "האכלה בטוחה מבקבוק כשהתינוק מוחזק בתנוחה מוגבהת",
+        },
       },
       {
         tag: "זיהוי",
@@ -73,6 +82,16 @@ export const erSections: ErSection[] = [
           "חוזרים על הרצף מספר פעמים - עד שהתינוק בוכה (=נושם), או עד שהתינוק אינו מגיב וצריך לעבור להחייאה.",
         ],
         tip: "מעל גיל 3 מבצעים תמרון היימליך במקום זאת.",
+        images: [
+          {
+            url: infantBackBlows.url,
+            alt: "הדגמת חמש טפיחות על גב תינוק בעת חנק מגוף זר",
+          },
+          {
+            url: infantChestThrusts.url,
+            alt: "הדגמת חמש לחיצות חזה לתינוק בעת חנק מגוף זר",
+          },
+        ],
         highlight: true,
       },
       {
@@ -112,6 +131,10 @@ export const erSections: ErSection[] = [
         tag: "שלב 4",
         title: "30 עיסויים",
         body: "מקמו את האגודלים בין קו הפטמות ובצעו לחיצות מהירות ואחידות.",
+        image: {
+          url: infantCprStep4.url,
+          alt: "הדגמת מיקום שתי אצבעות לביצוע עיסויי חזה בתינוק",
+        },
       },
       {
         tag: "שלב 5",
@@ -120,6 +143,10 @@ export const erSections: ErSection[] = [
         body: "אטמו את האף והפה של התינוק באמצעות הפה שלכם ובצעו 2 הנשמות בנפח מוגבל.",
         tip: "הסתבכתם? בצעו רק עיסויים!",
         bullets: ["החוק בישראל אומר שאין לבצע הנשמות בילד שהוא לא שלכם."],
+        image: {
+          url: infantCprStep5.url,
+          alt: "הדגמת ביצוע הנשמות לתינוק במסגרת החייאה",
+        },
       },
       {
         tag: "שלב 6",

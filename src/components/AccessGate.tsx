@@ -83,9 +83,44 @@ export function AccessGate({
               </p>
             )}
 
+            <div className="rounded-2xl bg-muted/60 border border-border/60 px-4 py-3">
+              <div className="flex items-start gap-3">
+                <input
+                  id="terms-agree"
+                  type="checkbox"
+                  checked={agreed}
+                  onChange={(e) => {
+                    setAgreed(e.target.checked);
+                    if (e.target.checked) setTermsError(false);
+                  }}
+                  className="mt-0.5 h-4 w-4 shrink-0 rounded border-input accent-primary"
+                />
+                <label
+                  htmlFor="terms-agree"
+                  className="text-xs leading-relaxed text-foreground/85 cursor-pointer"
+                >
+                  קראתי ואני מסכימ/ה{" "}
+                  <Link
+                    to="/terms"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-semibold text-foreground underline underline-offset-2"
+                  >
+                    לתנאי השימוש ולמדיניות הפרטיות
+                  </Link>
+                </label>
+              </div>
+              {termsError && (
+                <p className="mt-2 text-xs text-destructive text-right">
+                  יש לאשר את תנאי השימוש כדי להיכנס.
+                </p>
+              )}
+            </div>
+
             <button
               type="submit"
-              className="w-full rounded-2xl bg-primary text-primary-foreground font-semibold py-3.5 text-base shadow-sm hover:opacity-90 active:scale-[0.99] transition"
+              disabled={!agreed}
+              className="w-full rounded-2xl bg-primary text-primary-foreground font-semibold py-3.5 text-base shadow-sm hover:opacity-90 active:scale-[0.99] transition disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100"
             >
               כניסה
             </button>

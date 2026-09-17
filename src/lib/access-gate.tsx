@@ -11,7 +11,7 @@ import { useCallback, useEffect, useState } from "react";
  * storageKey שונה (ואולי גם קוד שונה) - שאר הלוגיקה כאן לא צריכה להשתנות.
  */
 /** גרסת התקנון - לעדכן כשמפרסמים נוסח חדש, כדי לתעד הסכמה מחדש. */
-export const TERMS_VERSION = "2026-09-draft-1";
+export const TERMS_VERSION = "2026-08-17";
 
 export const TERMS_CONSENT_STORAGE_KEY = "birth-guide-terms-consent";
 

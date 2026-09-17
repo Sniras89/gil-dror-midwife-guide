@@ -131,9 +131,15 @@ function TermsPage() {
           כולל מדיניות פרטיות
         </p>
 
+        <p className="mt-1 text-center text-xs text-muted-foreground">
+          עדכון אחרון: {LAST_UPDATED}
+        </p>
+
         <div className="mt-6 rounded-2xl bg-muted/70 border border-border/60 px-5 py-4">
           <p className="text-xs leading-relaxed text-muted-foreground">
-            שימו לב: זהו נוסח טיוטה זמני להצגה בלבד, עד לפרסום הנוסח הסופי.
+            ברוכים הבאים לאפליקציה. השימוש באפליקציה (בין אם באמצעות הדפדפן ובין אם
+            כאפליקציית מובייל) מהווה הסכמה לתנאים המפורטים במסמך זה. אם אינך מסכימ/ה
+            לתנאים - אנא הימנע/י משימוש באפליקציה.
           </p>
         </div>
 

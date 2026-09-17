@@ -10,6 +10,24 @@ import { useCallback, useEffect, useState } from "react";
  * כשנרצה גייט נפרד למדריך הלידה בעתיד: מספיק לתת ל-route של ה-ER
  * storageKey שונה (ואולי גם קוד שונה) - שאר הלוגיקה כאן לא צריכה להשתנות.
  */
+/** גרסת התקנון - לעדכן כשמפרסמים נוסח חדש, כדי לתעד הסכמה מחדש. */
+export const TERMS_VERSION = "2026-09-draft-1";
+
+export const TERMS_CONSENT_STORAGE_KEY = "birth-guide-terms-consent";
+
+/** תיעוד הסכמה לתקנון בדפדפן בלבד (ללא שליחה לשרת). */
+export function recordTermsConsent() {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(
+      TERMS_CONSENT_STORAGE_KEY,
+      JSON.stringify({ acceptedAt: new Date().toISOString(), version: TERMS_VERSION }),
+    );
+  } catch {
+    // אם אין גישה ל-localStorage (מצב פרטי וכו') - לא חוסמים את הכניסה.
+  }
+}
+
 export function useAccessUnlock(storageKey: string) {
   const [unlocked, setUnlocked] = useState(false);
   const [ready, setReady] = useState(false);

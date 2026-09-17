@@ -126,6 +126,15 @@ function Landing() {
             </div>
           </Link>
         </nav>
+
+        <footer className="mt-8 text-center">
+          <Link
+            to="/terms"
+            className="text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground transition"
+          >
+            תקנון ותנאי שימוש
+          </Link>
+        </footer>
       </main>
     </div>
   );

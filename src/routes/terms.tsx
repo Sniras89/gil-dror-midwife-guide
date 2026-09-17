@@ -152,7 +152,36 @@ function TermsPage() {
               <h2 className="text-base sm:text-lg font-bold text-foreground">
                 {index + 1}. {section.title}
               </h2>
-              {section.paragraphs.map((p) => (
+              {section.subtitle && (
+                <h3 className="mt-4 text-sm font-bold text-foreground/90">
+                  {section.subtitle}
+                </h3>
+              )}
+
+              {section.paragraphs?.map((p) => (
+                <p
+                  key={p.slice(0, 24)}
+                  className="mt-3 text-sm leading-relaxed text-foreground/85"
+                >
+                  {p}
+                </p>
+              ))}
+
+              {section.bullets && (
+                <ul className="mt-3 space-y-2.5">
+                  {section.bullets.map((b) => (
+                    <li
+                      key={b.slice(0, 24)}
+                      className="flex gap-2 text-sm leading-relaxed text-foreground/85"
+                    >
+                      <span className="mt-2 w-1.5 h-1.5 shrink-0 rounded-full bg-primary" />
+                      <span>{b}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+
+              {section.extraParagraphs?.map((p) => (
                 <p
                   key={p.slice(0, 24)}
                   className="mt-3 text-sm leading-relaxed text-foreground/85"

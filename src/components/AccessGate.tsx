@@ -22,11 +22,18 @@ export function AccessGate({
 }) {
   const [value, setValue] = useState("");
   const [error, setError] = useState(false);
+  const [agreed, setAgreed] = useState(false);
+  const [termsError, setTermsError] = useState(false);
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!agreed) {
+      setTermsError(true);
+      return;
+    }
     if (value.trim() === code) {
       setError(false);
+      recordTermsConsent();
       onUnlock();
     } else {
       setError(true);

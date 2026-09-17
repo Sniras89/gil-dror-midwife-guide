@@ -1,5 +1,7 @@
 import { useState, type ReactNode } from "react";
 import { Heart } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { recordTermsConsent } from "@/lib/access-gate";
 
 export type AccessGateCopy = {
   icon?: ReactNode;
